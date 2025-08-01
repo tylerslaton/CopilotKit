@@ -1,0 +1,6 @@
+overrides:
+  '@copilotkit/react-core': link:../../../../Library/pnpm/global/5/node_modules/@copilotkit/react-core
+  '@copilotkit/react-ui': link:../../../../Library/pnpm/global/5/node_modules/@copilotkit/react-ui
+  '@copilotkit/runtime': link:../../../../Library/pnpm/global/5/node_modules/@copilotkit/runtime
+  '@copilotkit/shared': link:../../../../Library/pnpm/global/5/node_modules/@copilotkit/shared
+  runtime-client-gql: link:../../../../Library/pnpm/global/5/node_modules/@copilotkit/runtime-client-gql
