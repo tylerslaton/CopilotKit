@@ -7,6 +7,31 @@ import { DeveloperConsoleModal } from "./developer-console-modal";
 
 // Storage key for hiding the Inspector trigger/modal
 const INSPECTOR_HIDE_KEY = "cpk:inspector:hidden";
+const HIDE_DURATION_MS = 24 * 60 * 60 * 1000; // 24 hours
+
+function getHideUntil(): number | null {
+  try {
+    if (typeof window === "undefined") return null;
+    const raw = localStorage.getItem(INSPECTOR_HIDE_KEY);
+    if (!raw) return null;
+    // legacy values
+    if (raw === "1" || raw === "true") return Number.MAX_SAFE_INTEGER;
+    const parsed = Number(raw);
+    return Number.isFinite(parsed) ? parsed : null;
+  } catch {
+    return null;
+  }
+}
+
+function hideForDuration(ms: number) {
+  try {
+    if (typeof window === "undefined") return;
+    const until = Date.now() + ms;
+    localStorage.setItem(INSPECTOR_HIDE_KEY, String(until));
+  } catch {
+    // ignore
+  }
+}
 
 interface ConsoleTriggerProps {
   position?: "bottom-left" | "bottom-right";
@@ -34,21 +59,23 @@ export function ConsoleTrigger({ position = "bottom-right" }: ConsoleTriggerProp
   useEffect(() => {
     setMounted(true);
     try {
-      const hidden =
-        typeof window !== "undefined" ? localStorage.getItem(INSPECTOR_HIDE_KEY) : null;
-      if (hidden === "1" || hidden === "true") {
+      const until = getHideUntil();
+      if (until && Date.now() < until) {
         setIsHidden(true);
+      } else if (until && Number.isFinite(until) && until !== Number.MAX_SAFE_INTEGER) {
+        // expired -> clear
+        localStorage.removeItem(INSPECTOR_HIDE_KEY);
       }
     } catch {
       // ignore
     }
     if (typeof window !== "undefined" && !buttonPosition) {
-      const buttonSize = 60;
-      const margin = 24;
+      const buttonSize = 48;
+      const margin = 16;
 
       const initialPosition = {
         x: margin,
-        y: window.innerHeight - buttonSize - margin,
+        y: margin, // top-left by default
       };
 
       setButtonPosition(initialPosition);
@@ -119,11 +146,9 @@ export function ConsoleTrigger({ position = "bottom-right" }: ConsoleTriggerProp
         ref={buttonRef}
         onClick={(e) => {
           if (!isDragging) {
-            // Modifier-click hides
+            // Modifier-click hides for 24h
             if (e.metaKey || e.altKey) {
-              try {
-                localStorage.setItem(INSPECTOR_HIDE_KEY, "1");
-              } catch {}
+              hideForDuration(HIDE_DURATION_MS);
               setIsHidden(true);
               return;
             }
@@ -132,9 +157,7 @@ export function ConsoleTrigger({ position = "bottom-right" }: ConsoleTriggerProp
         }}
         onContextMenu={(e) => {
           e.preventDefault();
-          try {
-            localStorage.setItem(INSPECTOR_HIDE_KEY, "1");
-          } catch {}
+          hideForDuration(HIDE_DURATION_MS);
           setIsHidden(true);
         }}
         onMouseDown={handleMouseDown}
@@ -145,79 +168,43 @@ export function ConsoleTrigger({ position = "bottom-right" }: ConsoleTriggerProp
           left: `${buttonPosition.x}px`,
           top: `${buttonPosition.y}px`,
           zIndex: 2147483647,
-          width: "60px",
-          height: "60px",
-          background: isDragging ? "#000000" : isHovered ? "#111111" : "#000000",
+          width: "48px",
+          height: "48px",
+          background: isDragging ? "#0b0b0b" : isHovered ? "#101010" : "#0b0b0b",
           color: "white",
-          borderRadius: "50%",
+          borderRadius: "12px",
           boxShadow: isDragging
-            ? "0 8px 32px rgba(0, 0, 0, 0.6), 0 4px 16px rgba(0, 0, 0, 0.4)"
+            ? "0 6px 18px rgba(0,0,0,0.22)"
             : isHovered
-              ? "0 12px 40px rgba(0, 0, 0, 0.7), 0 6px 20px rgba(0, 0, 0, 0.5)"
-              : "0 6px 20px rgba(0, 0, 0, 0.5), 0 3px 10px rgba(0, 0, 0, 0.3)",
-          transition: isDragging ? "none" : "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+              ? "0 4px 12px rgba(0,0,0,0.18)"
+              : "0 2px 8px rgba(0,0,0,0.15)",
+          transition: isDragging ? "none" : "all 0.2s ease",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          border: "none",
+          border: "1px solid rgba(255,255,255,0.08)",
           cursor: isDragging ? "grabbing" : "grab",
-          opacity: 1,
+          opacity: 0.96,
           userSelect: "none",
-          transform: isDragging ? "scale(1.05)" : isHovered ? "scale(1.1)" : "scale(1)",
-          backdropFilter: "blur(10px)",
+          transform: isDragging ? "scale(1.02)" : isHovered ? "scale(1.04)" : "scale(1)",
+          backdropFilter: "blur(6px)",
           pointerEvents: "auto",
           isolation: "isolate",
         }}
         title={
           hasApiKey
-            ? "Open Inspector (Drag to move)"
-            : "Inspector (License Key Required, Drag to move)"
+            ? "Open Inspector (Drag to move, right-click to hide 24h)"
+            : "Inspector (License Key Required, drag to move, right-click to hide 24h)"
         }
       >
-        {/* Close (hide) control */}
         <div
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            try {
-              localStorage.setItem(INSPECTOR_HIDE_KEY, "1");
-            } catch {
-              // ignore
-            }
-            setIsHidden(true);
-          }}
           style={{
-            position: "absolute",
-            bottom: "2px",
-            right: "2px",
-            width: "20px",
-            height: "20px",
-            borderRadius: "50%",
-            background: "#ffffff",
-            color: "#ef4444",
-            fontSize: "14px",
-            lineHeight: "18px",
-            textAlign: "center",
-            boxShadow: "0 2px 6px rgba(0,0,0,0.35)",
-            cursor: "pointer",
-            border: "1px solid #e5e7eb",
+            width: "22px",
+            height: "22px",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            zIndex: 1,
-          }}
-          title="Hide Inspector"
-        >
-          ×
-        </div>
-        <div
-          style={{
-            width: "28px",
-            height: "28px",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.2))",
+            filter: "none",
           }}
         >
           <CopilotKitIcon />
@@ -226,20 +213,20 @@ export function ConsoleTrigger({ position = "bottom-right" }: ConsoleTriggerProp
           <div
             style={{
               position: "absolute",
-              top: "-2px",
-              right: "-2px",
-              width: "18px",
-              height: "18px",
-              background: "linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%)",
+              top: "-4px",
+              right: "-4px",
+              width: "14px",
+              height: "14px",
+              background: "#ef4444",
               borderRadius: "50%",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              boxShadow: "0 2px 8px rgba(255, 107, 107, 0.4)",
-              border: "2px solid white",
+              boxShadow: "0 1px 4px rgba(239,68,68,0.35)",
+              border: "1px solid white",
             }}
           >
-            <span style={{ fontSize: "10px", color: "white", fontWeight: "bold" }}>!</span>
+            <span style={{ fontSize: "9px", color: "white", fontWeight: "bold" }}>!</span>
           </div>
         )}
       </button>
