@@ -33,14 +33,14 @@ For further reading, check out the [Model Context Protocol](https://modelcontext
 <Steps>
   <Step>
     ### Get an MCP Server
-    First, we need to make sure we have an MCP server to connect to. You can use any MCP SSE endpoint you have configured.
+    First, we need to make sure we have an MCP server to connect to. Use an MCP HTTP endpoint that supports streamable responses.
 
     <Accordions className="shadow-lg ring-1 ring-indigo-400 selected bg-gradient-to-r from-indigo-100/80 to-purple-200 dark:from-indigo-900/30 dark:to-purple-900/50">
       <Accordion title="Get an MCP Server from Composio">
         <p>
           Composio provides a registry of ready-to-use MCP servers with simple authentication and setup.
 
-          To get started, go to [Composio](https://mcp.composio.dev/), find a server the suits your needs and copy the SSE URL before continuing here.
+          To get started, go to [Composio](https://mcp.composio.dev/), find a server that suits your needs and copy the HTTP endpoint URL before continuing here.
         </p>
       </Accordion>
     </Accordions>
@@ -122,7 +122,7 @@ For further reading, check out the [Model Context Protocol](https://modelcontext
             setMcpServers([
               {
                 // Try a sample MCP server at https://mcp.composio.dev/
-                endpoint: "your_mcp_sse_url",
+                endpoint: "https://your-mcp-http-endpoint",
               },
             ]);
           }, [setMcpServers]);
