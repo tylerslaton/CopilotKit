@@ -106,7 +106,7 @@ Before you begin, you'll need the following:
             </Step>
         </TailoredContentOption>
         <TailoredContentOption
-            id="exiting-agent"
+            id="existing-agent"
             title="Use an existing agent"
             description="I already have a Pydantic AI Agent and want to use it with CopilotKit."
             icon={<PydanticAIIcon className="w-4 h-4 text-bold" />}
@@ -158,8 +158,8 @@ Before you begin, you'll need the following:
             </Step>
             <Step>
                 ### Setup the Copilot Runtime
-                CopilotKit's runtime is responsible secure communication between your agent and your frontend. As you progress
-                with your applicaiton, this will be where you'll do things like setup threads or authentication.
+                CopilotKit's runtime is responsible for secure communication between your agent and your frontend. As you progress
+                with your application, this will be where you'll do things like set up threads or authentication.
 
                 For now, let's start with a minimal setup.
 
@@ -177,7 +177,7 @@ Before you begin, you'll need the following:
                 const serviceAdapter = new ExperimentalEmptyAdapter();
 
                 // 2. Create the CopilotRuntime instance and utilize the PydanticAI AG-UI
-                //    integration to setup the connection.
+                //    integration to set up the connection.
                 const runtime = new CopilotRuntime({
                   agents: {
                     // Our AG-UI endpoint URL
@@ -198,8 +198,8 @@ Before you begin, you'll need the following:
                ```
             </Step>
             <Step>
-                ### Setup the CopilotKit provider
-                The CopilotKit provide component is responsible for managing the session with your current agent. Typically,
+                ### Set up the CopilotKit provider
+                The CopilotKit provider component is responsible for managing the session with your current agent. Typically,
                 users will wrap their entire application in the CopilotKit provider.
 
                 ```tsx title="app/layout.tsx"
@@ -211,7 +211,7 @@ Before you begin, you'll need the following:
                   return (
                     <html lang="en">
                       <body>
-                        {/* This points to the runtime we setup in the previous step */} // [!code highlight:4]
+                {/* This points to the runtime we set up in the previous step */} // [!code highlight:4]
                         <CopilotKit runtimeUrl="/api/copilotkit" agent="my_agent">
                           {children}
                         </CopilotKit>
@@ -222,7 +222,7 @@ Before you begin, you'll need the following:
                 ```
             </Step>
             <Step>
-                ### Setup the Copilot UI
+                ### Set up the Copilot UI
                 The last step is to use CopilotKit's UI components to render the chat interaction with your agent. In most situations,
                 this is done alongside your core page components, e.g. in your `page.tsx` file.
 
