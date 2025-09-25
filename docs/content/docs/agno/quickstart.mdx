@@ -80,10 +80,10 @@ Before you begin, you'll need the following:
             <Step>
                 ### Install dependencies
 
-                Now we need to install the depedencies for the frontend and the agent. This repo comes with a helper function to do this for you.
+                Now we need to install the dependencies for the frontend and the agent. This repo comes with a helper function to do this for you.
 
                 <Callout type="info">
-                    This Agno agent uses pip and manages the installation of dependencies through an package.json script, `install:agent`.
+                    This Agno agent uses pip and manages the installation of dependencies through a package.json script, `install:agent`.
                 </Callout>
 
                 <Tabs groupId="package-manager" items={['npm', 'pnpm', 'yarn', 'bun']}>
@@ -159,11 +159,11 @@ Before you begin, you'll need the following:
         <TailoredContentOption
             id="bring-your-own"
             title="Integrate with existing agent"
-            description="I already have a Agno Agent and want to add CopilotKit."
+            description="I already have an Agno Agent and want to add CopilotKit."
             icon={<img src="https://cdn.copilotkit.ai/docs/copilotkit/images/copilotkit-logo.svg" alt="CopilotKit Logo" width={20} height={20} />}
         >
             <Step>
-                ### Serve your Agno agent as a AG-UI endpoint
+                ### Serve your Agno agent as an AG-UI endpoint
 
                 ```python title="agent.py"
                 from agno.app.agui.app import AGUIApp
@@ -230,7 +230,7 @@ Before you begin, you'll need the following:
 
                 // [!code highlight:8]
                 // 2. Create the CopilotRuntime instance and utilize the Agno AG-UI
-                //    integration to setup the connection.
+                //    integration to set up the connection.
                 const runtime = new CopilotRuntime({
                      agents: {
                         // Our FastAPI endpoint URL

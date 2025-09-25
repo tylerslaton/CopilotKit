@@ -43,11 +43,11 @@ import { FaCloud, FaServer } from "react-icons/fa";
             description="I'm already using or want to use Copilot Cloud."
             icon={<FaCloud />}
         >
-            If you followed the [Copilot Cloud Quickstart](/docs/quickstart) and opted to use CopilotCloud,
+            If you followed the [Copilot Cloud Quickstart](/quickstart) and opted to use Copilot Cloud,
             you only need to add your LangGraph Platform deployment URL and LangSmith API key to your CopilotCloud.
 
             <Accordions className="my-4">
-                <Accordion title="Haven't setup Copilot Cloud yet? Click here!" >
+                <Accordion title="Haven't set up Copilot Cloud yet? Click here!" >
                     Copilot Cloud hooks into your CopilotKit provider, so you'll need to set it up first if you haven't already.
                     <CopilotCloudConfigureCopilotkitProviderSnippet components={props.components} />
                 </Accordion>
@@ -111,7 +111,7 @@ For production deployments, you'll want to implement proper authentication to en
 <Callout type="info">
   Learn how to implement secure authentication with your LangGraph agents in our
   comprehensive [LangGraph Agent Authentication
-  Guide](/coagents/shared/guides/langgraph-platform-authentication).
+  Guide](/langgraph/shared/guides/langgraph-platform-authentication).
 </Callout>
 
 ### Quick Example
@@ -148,4 +148,4 @@ A few things to try if you are running into trouble:
 1. Make sure that you listed your agents according to the graphs mentioned in the `langgraph.json` file
 2. Make sure the agent names are the same between the agent Python implementation, the `langgraph.json` file and the remote endpoint declaration
 3. Make sure the LangGraph Platform deployment has all environment variables listed as you need them to be, according to your agent implementation
-4. **Authentication issues**: If you're having trouble with authentication, check that you're passing the `authorization` token in the `properties` prop and that your agent is properly validating it. See the [authentication guide](/coagents/shared/guides/langgraph-platform-authentication) for details.
+4. **Authentication issues**: If you're having trouble with authentication, check that you're passing the `authorization` token in the `properties` prop and that your agent is properly validating it. See the [authentication guide](/langgraph/shared/guides/langgraph-platform-authentication) for details.
