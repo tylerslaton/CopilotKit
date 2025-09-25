@@ -37,13 +37,17 @@ Without frontend actions, agents are limited to just processing and returning da
 
 ## Implementation
 
+<Callout>
+Check out the [Frontend Actions overview](/frontend-actions) to understand what they are and when to use them.
+</Callout>
+
 <Steps>
     <Step>
-        ### Setup CopilotKit
+        ### Set up CopilotKit
 
-        To use frontend actions, you'll need to setup CopilotKit first. For the sake of brevity, we won't cover it here.
+        To use frontend actions, you'll need to set up CopilotKit first. For the sake of brevity, we won't cover it here.
 
-        Check out our [getting started guide](/pydantic-ai/quickstart/pydantic-ai) and come back here when you're setup!
+        Check out our [getting started guide](/pydantic-ai/quickstart/pydantic-ai) and come back here when you're set up!
     </Step>
 
     <Step>
@@ -81,13 +85,13 @@ Without frontend actions, agents are limited to just processing and returning da
         ```
     </Step>
     <Step>
-        ###  Modify your agent
-        Now, we'll need to modify the agent to access these frontend actions. Open up for your agent's folder and continue from there!
+        ### Install the CopilotKit SDK
+        <InstallSDKSnippet components={props.components}/>
     </Step>
     <Step>
-        ### Setup your Pydantic AI Agent
+        ### Set up your Pydantic AI agent
 
-        Pydantic AI automatically picks up frontend actions when you create your agent. No special configuration or state inheritance is needed:
+        Pydantic AI (via AG-UI) automatically picks up frontend actions when you create your agent. No special configuration or state inheritance is needed:
 
         <Tabs groupId="language" items={['Python']} default="Python">
             <Tab value="Python">
@@ -104,7 +108,7 @@ Without frontend actions, agents are limited to just processing and returning da
     </Step>
     <Step>
         ### Give it a try!
-        You've now given your agent the ability to directly call any CopilotActions you've defined. These actions will be available as tools to the agent where they can be used as needed.
+        You've now given your agent the ability to directly call any frontend actions you've defined. These actions will be available as tools to the agent where they can be used as needed.
     </Step>
 
 </Steps> 
