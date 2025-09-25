@@ -272,20 +272,19 @@ export interface CopilotRuntimeConstructorParams<T extends Parameter[] | [] = []
    * Required if `mcpServers` is provided.
    *
    * ```typescript
-   * import { experimental_createMCPClient } from "ai"; // Import from vercel ai library
-   * // ...
+   * // Example using HTTP Stream transport (recommended)
+   * // with a custom MCP HTTP client that implements the MCPClient interface.
+   * // See: registry quickstart HttpStreamClient for a reference implementation.
    * const runtime = new CopilotRuntime({
-   *   mcpServers: [{ endpoint: "..." }],
+   *   mcpServers: [{ endpoint: "https://your-mcp-server" }],
    *   async createMCPClient(config) {
-   *     return await experimental_createMCPClient({
-   *       transport: {
-   *         type: "sse",
-   *         url: config.endpoint,
-   *         headers: config.apiKey
-   *           ? { Authorization: `Bearer ${config.apiKey}` }
-   *           : undefined,
-   *       },
+   *     const { HttpStreamClient } = await import("@/registry/quickstarts/mcp-starter/utils/http-stream-client");
+   *     const client = new HttpStreamClient({
+   *       serverUrl: config.endpoint,
+   *       headers: config.apiKey ? { Authorization: `Bearer ${config.apiKey}` } : undefined,
    *     });
+   *     await client.connect();
+   *     return client;
    *   }
    * });
    * ```
