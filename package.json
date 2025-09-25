@@ -11,8 +11,11 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@playwright/test": "^1.55.1",
     "danger": "^12.3.3",
-    "husky": "^9.1.4"
+    "husky": "^9.1.4",
+    "playwright": "^1.55.1",
+    "puppeteer": "^24.22.3"
   },
   "dependencies": {
     "@copilotkit/react-core": "1.8.11",
