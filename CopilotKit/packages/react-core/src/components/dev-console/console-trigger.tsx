@@ -8,6 +8,28 @@ import { DeveloperConsoleModal } from "./developer-console-modal";
 // Storage key for hiding the Inspector trigger/modal
 const INSPECTOR_HIDE_KEY = "cpk:inspector:hidden";
 
+// Helper to safely access localStorage
+function safeLocalStorageGet(key: string): string | null {
+  try {
+    if (typeof window !== "undefined" && window.localStorage) {
+      return localStorage.getItem(key);
+    }
+  } catch {
+    // Silently fail in environments without localStorage access
+  }
+  return null;
+}
+
+function safeLocalStorageSet(key: string, value: string): void {
+  try {
+    if (typeof window !== "undefined" && window.localStorage) {
+      localStorage.setItem(key, value);
+    }
+  } catch {
+    // Silently fail in environments without localStorage access
+  }
+}
+
 interface ConsoleTriggerProps {
   position?: "bottom-left" | "bottom-right";
 }
@@ -33,14 +55,9 @@ export function ConsoleTrigger({ position = "bottom-right" }: ConsoleTriggerProp
   // Initialize on client side only
   useEffect(() => {
     setMounted(true);
-    try {
-      const hidden =
-        typeof window !== "undefined" ? localStorage.getItem(INSPECTOR_HIDE_KEY) : null;
-      if (hidden === "1" || hidden === "true") {
-        setIsHidden(true);
-      }
-    } catch {
-      // ignore
+    const hidden = safeLocalStorageGet(INSPECTOR_HIDE_KEY);
+    if (hidden === "1" || hidden === "true") {
+      setIsHidden(true);
     }
     if (typeof window !== "undefined" && !buttonPosition) {
       const buttonSize = 60;
@@ -121,9 +138,7 @@ export function ConsoleTrigger({ position = "bottom-right" }: ConsoleTriggerProp
           if (!isDragging) {
             // Modifier-click hides
             if (e.metaKey || e.altKey) {
-              try {
-                localStorage.setItem(INSPECTOR_HIDE_KEY, "1");
-              } catch {}
+              safeLocalStorageSet(INSPECTOR_HIDE_KEY, "1");
               setIsHidden(true);
               return;
             }
@@ -132,9 +147,7 @@ export function ConsoleTrigger({ position = "bottom-right" }: ConsoleTriggerProp
         }}
         onContextMenu={(e) => {
           e.preventDefault();
-          try {
-            localStorage.setItem(INSPECTOR_HIDE_KEY, "1");
-          } catch {}
+          safeLocalStorageSet(INSPECTOR_HIDE_KEY, "1");
           setIsHidden(true);
         }}
         onMouseDown={handleMouseDown}
@@ -179,11 +192,7 @@ export function ConsoleTrigger({ position = "bottom-right" }: ConsoleTriggerProp
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
-            try {
-              localStorage.setItem(INSPECTOR_HIDE_KEY, "1");
-            } catch {
-              // ignore
-            }
+            safeLocalStorageSet(INSPECTOR_HIDE_KEY, "1");
             setIsHidden(true);
           }}
           style={{
