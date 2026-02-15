@@ -1,0 +1,62 @@
+---
+title: CopilotKit Runtime
+icon: "lucide/Server"
+description: Understand the role of the CopilotKit Runtime and when you might connect directly to your agents.
+---
+
+# CopilotKit Runtime
+
+The CopilotKit Runtime is the backend layer that sits between your frontend application and your AI agents. It handles agent routing, middleware execution, authentication, and more.
+
+Most CopilotKit applications use the runtime — it's set up during the [quickstart](/quickstart) and provides important infrastructure for production applications.
+
+## What the Runtime Does
+
+When you use the CopilotKit Runtime, it provides:
+
+- **Authentication and security** — Safe defaults for securing your agent endpoints, preventing unauthenticated access.
+- **AG-UI Middleware** — Server-side middleware (`agent.use`) that runs in a trusted environment, enabling features like logging, guardrails, and request transformation.
+- **Agent routing** — Automatic discovery and routing between multiple agents.
+- **Premium features** — Access to CopilotKit features like [threads](/premium/threads), [observability](/premium/observability), and the [inspector](/premium/inspector).
+
+## Connecting Directly to AG-UI Agents
+
+CopilotKit is built on the [AG-UI protocol](/ag-ui-protocol), which is an open standard. You can connect your frontend directly to any AG-UI-compatible agent without the CopilotKit Runtime.
+
+To do this, pass your AG-UI agent instances directly to the `CopilotKit` provider using the `agents__unsafe_dev_only` prop:
+
+```tsx
+import { HttpAgent } from "@ag-ui/client";
+
+const myAgent = new HttpAgent({
+  url: "https://my-agent.example.com",
+});
+
+<CopilotKit agents__unsafe_dev_only={{ "my-agent": myAgent }}>
+  <YourApp />
+</CopilotKit>
+```
+
+This works today and is fully supported. However, there are important considerations.
+
+### What to Keep in Mind
+
+1. **Authentication is your responsibility.** When you use the CopilotKit Runtime, safe authentication defaults are put in place for you. When you connect directly, you are responsible for ensuring your agent endpoint is properly secured and not exposed to unauthenticated access.
+
+2. **AG-UI middleware runs on the backend.** The AG-UI protocol supports a middleware layer (`agent.use`) that is designed to run in a trusted server environment. When connecting directly from the client, be aware that client-side middleware can be easily modified. If your application relies on middleware for security or data integrity, consider whether a direct connection is appropriate.
+
+3. **Some ecosystem features require the runtime.** Features like [threads](/premium/threads), [observability](/premium/observability), and other premium capabilities are provided through the CopilotKit Runtime. These will not be available when connecting directly to an agent.
+
+## Which Approach Should I Use?
+
+| | With Runtime | Direct Connection |
+|---|---|---|
+| **Authentication** | Safe defaults provided | You manage it |
+| **AG-UI Middleware** | Runs server-side in a trusted environment | Runs client-side |
+| **Agent Routing** | Automatic | Manual |
+| **Premium Features** | Available | Not available |
+| **Setup** | Requires a backend endpoint | Frontend-only |
+
+**Use the Runtime** if you want production-ready defaults, premium features, or server-side middleware execution.
+
+**Connect directly** if you want a lightweight, frontend-only setup and are comfortable managing authentication and middleware yourself.
